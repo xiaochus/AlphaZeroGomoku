@@ -12,7 +12,7 @@ def train():
     """
     Train the model with self-play.
     """
-    player = AlphaZeroPlayer(selfplay=1, init=1)
+    player = AlphaZeroPlayer(selfplay=1, init=0)
     game = Game(c.SIZE, c.PIECE, 1)
 
     record = {"loss": [], "val_loss": []}
@@ -30,7 +30,7 @@ def train():
             player.save_model()
 
     player.save_model()
-    df = pd.DataFram.from_dict(record)
+    df = pd.DataFrame.from_dict(record)
     df.to_csv('alpha/data/loss.csv', encoding='utf-8', index=False)
 
 

@@ -9,7 +9,6 @@ from .policy_mcts import MCTS as PolicyMCTS
 from .model import PolicyValueNet
 
 import numpy as np
-import pandas as pd
 from keras.utils.vis_utils import plot_model
 
 
@@ -141,9 +140,9 @@ class AlphaZeroPlayer(Player):
                            epochs=c.TRAIN_EPOCHS,
                            validation_split=0.05)
 
-        df = pd.DataFrame.from_dict(h.history)
-        loss = df['loss'].values[-1]
-        val_loss = df['val_loss'].values[-1]
+        df = h.history
+        loss = df['loss'][-1]
+        val_loss = df['val_loss'][-1]
 
         return loss, val_loss
 

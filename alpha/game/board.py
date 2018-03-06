@@ -65,9 +65,16 @@ class Board(object):
             p = len(self.states)
 
         for i in range(p):
-            pos = self.states[-(i + 1)]
-            row, col = self._convert_position(pos, 'm')
-            states_matrix[i][row][col] = 1
+            if i == 0:
+                x = self.states
+            else:
+                x = self.states[:-i]
+
+            temp = [x[i] for i in range(len(x) - 1, -1, -2)]
+
+            for t in temp:
+                row, col = self._convert_position(t, 'm')
+                states_matrix[i][row][col] = 1
 
         if self.current_player == self.start_player:
             states_matrix[6] = np.ones((self.size[0], self.size[1]))
