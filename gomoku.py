@@ -144,6 +144,10 @@ def main():
     else:
         players = [ManPlayer, AIPlayer]
 
+    if c.AI_V_AI:
+        AIPlayer2 = AlphaZeroPlayer()
+        players = [AIPlayer, AIPlayer2]
+
     turn = 0
 
     while running:

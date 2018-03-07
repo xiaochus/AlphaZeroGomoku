@@ -10,6 +10,7 @@ from .model import PolicyValueNet
 
 import numpy as np
 from keras.utils.vis_utils import plot_model
+from keras.preprocessing.image import ImageDataGenerator
 
 
 class Player(metaclass=ABCMeta):
@@ -121,32 +122,49 @@ class AlphaZeroPlayer(Player):
         else:
             return move
 
-    def update(self, states, values, probs):
+    def update(self, states, values, probs, augment=0):
         """Updata the policy value network with pre states.
 
         # Arguments
             states: states for network input.
-            value: Integer, value output.
+            value: ndarray, value output.
             policy: ndarray, policy output.
+            augment: Boolean, use augment or not.
 
         # Returns
             loss: Double, train loss per self-play update.
             val_loss: Double, val loss per self-play update.
         """
-        h = self.model.fit(states,
-                           {'value_output': values, 'policy_output': probs},
-                           verbose=0,
-                           batch_size=c.BATCH,
-                           epochs=c.TRAIN_EPOCHS,
-                           validation_split=0.05)
+        loss, h = [], None
+
+        if augment:
+            datagen = ImageDataGenerator(vertical_flip=True,
+                                         horizontal_flip=True,
+                                         data_format="channels_first")
+
+            y = np.c_[probs, values]
+            for e in range(c.TRAIN_EPOCHS):
+                batches = 0
+                for x_b, y_b in datagen.flow(states, y, batch_size=c.BATCH):
+                    y_value = y_b[:, -1]
+                    y_ploicy = y_b[:, :-1]
+                    h = self.model.fit(x_b, [y_value, y_ploicy], verbose=0)
+                    batches += 1
+                    if batches >= len(x_b) / c.BATCH:
+                        break
+        else:
+            h = self.model.fit(
+                states, {'value_output': values, 'policy_output': probs},
+                verbose=0, batch_size=c.BATCH, epochs=c.TRAIN_EPOCHS)
 
         df = h.history
-        loss = df['loss'][-1]
-        val_loss = df['val_loss'][-1]
+        loss.append(df['loss'][-1])
+        loss.append(df['value_output_loss'][-1])
+        loss.append(df['policy_output_loss'][-1])
 
-        return loss, val_loss
+        return loss
 
     def save_model(self):
-        """Save the current policyvalue network model
+        """Save the current policyvalue network model.
         """
         self.model.save_weights('alpha\data\pvmodel.h5')

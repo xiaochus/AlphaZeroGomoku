@@ -2,6 +2,7 @@
 """
 Reinforcement Learning the PolicyValue Network.
 """
+import warnings
 import pandas as pd
 import alpha.config as c
 from alpha.game.game import Game
@@ -12,19 +13,22 @@ def train():
     """
     Train the model with self-play.
     """
-    player = AlphaZeroPlayer(selfplay=1, init=0)
+    warnings.filterwarnings("ignore")
+
+    player = AlphaZeroPlayer(selfplay=1, init=1)
     game = Game(c.SIZE, c.PIECE, 1)
 
-    record = {"loss": [], "val_loss": []}
+    record = {"loss": [], "value_output_loss": [], "policy_output_loss": []}
     for i in range(c.SELF_PLAY_EPOCHS):
         states, move_probs, values = game.self_play(player)
         print("Self-play turn {0}".format(i + 1))
 
-        loss, val_loss = player.update(states, values, move_probs)
-        print("Network update >> loss:{0} val_loss:{1}".format(loss, val_loss))
+        loss = player.update(states, values, move_probs, 1)
+        print("Network update >> loss:{0}, value_loss:{1}, policy_loss:{2}".format(loss[0], loss[1], loss[2]))
 
-        record["loss"].append(loss)
-        record["val_loss"].append(val_loss)
+        record["loss"].append(loss[0])
+        record["value_output_loss"].append(loss[1])
+        record["policy_output_loss"].append(loss[2])
 
         if i % 10 == 0:
             player.save_model()

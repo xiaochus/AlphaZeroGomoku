@@ -18,8 +18,8 @@ FILTERS = 32
 # train params for policy value network during self-play
 
 TRAIN_EPOCHS = 50
-BATCH = 20
-SELF_PLAY_EPOCHS = 500
+BATCH = 50
+SELF_PLAY_EPOCHS = 200
 
 # params for MCTS
 c_puct = 5
@@ -28,3 +28,4 @@ N_SIMULATE = 500
 
 # param for game AI
 FIRST = 0
+AI_V_AI = 1

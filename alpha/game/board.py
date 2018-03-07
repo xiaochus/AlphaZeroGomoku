@@ -46,6 +46,7 @@ class Board(object):
             col = p % self.size[0]
 
             return row, col
+
         if t == 's':
             m = p[0] * self.size[0] + p[1]
 
@@ -167,20 +168,20 @@ class Board(object):
                            [[0, -1], [0, 1]],
                            [[-1, -1], [1, 1]],
                            [[1, -1], [-1, 1]]])
-
-        for x in direct:
+        for d in direct:
             count = 1
-            for y in x:
+            for x in d:
                 flag = True
-                temp_index = cur_piece
+                temp = cur_piece
                 while flag:
-                    temp_index = temp_index + y
-                    if self._convert_position(temp_index, 's') in cps:
+                    temp = temp + x
+                    s = self._convert_position(temp, 's')
+                    if s in cps and 0 <= temp[0] < self.size[0] and 0 <= temp[1] < self.size[0]:
                         count += 1
                     else:
                         flag = False
 
-            if count == self.piece:
+            if count >= self.piece:
                 win = 1
                 break
 
