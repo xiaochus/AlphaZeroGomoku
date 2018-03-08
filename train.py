@@ -30,7 +30,7 @@ def train():
         record["value_output_loss"].append(loss[1])
         record["policy_output_loss"].append(loss[2])
 
-        if i % 10 == 0:
+        if i % 50 == 0:
             player.save_model()
 
     player.save_model()

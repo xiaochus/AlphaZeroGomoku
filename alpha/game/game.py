@@ -69,17 +69,18 @@ class Game(object):
             values: List, output value for training.
         """
         self._restart_game()
-        states, move_probs, current_players = [], [], []
         winner, win = 0, 0
+        states, move_probs, current_players = [], [], []
 
         while True:
+            states.append(self.board.get_current_states())
+
             move, probs = player.get_action(self.board, 1)
             flag = self.board.move(move)
 
             if not flag:
                 return -1
 
-            states.append(self.board.get_current_states())
             move_probs.append(probs)
             current_player = self.board.get_current_player()
             current_players.append(current_player)
