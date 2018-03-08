@@ -138,7 +138,8 @@ class AlphaZeroPlayer(Player):
         loss, h = [], None
 
         if augment:
-            datagen = ImageDataGenerator(vertical_flip=True,
+            datagen = ImageDataGenerator(rotation_range=30,
+                                         vertical_flip=True,
                                          horizontal_flip=True,
                                          data_format="channels_first")
 

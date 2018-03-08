@@ -59,26 +59,29 @@ class Board(object):
             states_matrix: ndarray(height * width * (period + 1)),
                 states on the board with in period.
         """
-        p = c.STEP * 2
-        states_matrix = np.zeros((p + 1, self.size[0], self.size[1]))
+        states_matrix = np.zeros((c.STEP * 2 + 1, self.size[0], self.size[1]))
 
-        if len(self.states) < p:
-            p = len(self.states)
+        cur = [self.states[i] for i in range(len(self.states) - 2, -1, -2)]
+        opp = [self.states[i] for i in range(len(self.states) - 1, -1, -2)]
+        temp = [cur, opp]
 
-        for i in range(p):
+        for i in range(2):
+            x = temp[i]
+            p = len(x) if len(x) < c.STEP else c.STEP
+
             if i == 0:
-                x = self.states
+                index = list(range(0, c.STEP * 2, 2))
             else:
-                x = self.states[:-i]
+                index = list(range(1, c.STEP * 2, 2))
 
-            temp = [x[i] for i in range(len(x) - 1, -1, -2)]
-
-            for t in temp:
-                row, col = self._convert_position(t, 'm')
-                states_matrix[i][row][col] = 1
+            for j in range(p):
+                x_step = x[j:]
+                for t in x_step:
+                    row, col = self._convert_position(t, 'm')
+                    states_matrix[index[j]][row][col] = 1
 
         if self.current_player == self.start_player:
-            states_matrix[6] = np.ones((self.size[0], self.size[1]))
+            states_matrix[c.STEP * 2] = np.ones((self.size[0], self.size[1]))
 
         return states_matrix
 
