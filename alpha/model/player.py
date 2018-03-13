@@ -122,41 +122,23 @@ class AlphaZeroPlayer(Player):
         else:
             return move
 
-    def update(self, states, values, probs, augment=0):
+    def update(self, states, values, probs):
         """Updata the policy value network with pre states.
 
         # Arguments
-            states: states for network input.
+            states: ndarray, states for network input.
             value: ndarray, value output.
             policy: ndarray, policy output.
-            augment: Boolean, use augment or not.
 
         # Returns
             loss: Double, train loss per self-play update.
             val_loss: Double, val loss per self-play update.
         """
-        loss, h = [], None
+        loss = []
 
-        if augment:
-            datagen = ImageDataGenerator(rotation_range=30,
-                                         vertical_flip=True,
-                                         horizontal_flip=True,
-                                         data_format="channels_first")
-
-            y = np.c_[probs, values]
-            for e in range(c.TRAIN_EPOCHS):
-                batches = 0
-                for x_b, y_b in datagen.flow(states, y, batch_size=c.BATCH):
-                    y_value = y_b[:, -1]
-                    y_ploicy = y_b[:, :-1]
-                    h = self.model.fit(x_b, [y_value, y_ploicy], verbose=0)
-                    batches += 1
-                    if batches >= len(x_b) / c.BATCH:
-                        break
-        else:
-            h = self.model.fit(
-                states, {'value_output': values, 'policy_output': probs},
-                verbose=0, batch_size=c.BATCH, epochs=c.TRAIN_EPOCHS)
+        h = self.model.fit(
+            states, {'value_output': values, 'policy_output': probs},
+            verbose=0, batch_size=c.BATCH, epochs=c.TRAIN_EPOCHS)
 
         df = h.history
         loss.append(df['loss'][-1])

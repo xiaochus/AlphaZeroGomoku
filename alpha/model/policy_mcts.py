@@ -118,7 +118,7 @@ class MCTS(object):
     def _simulate(self, board, policy, value):
         """Simluation.
 
-        Run a single playout from the root to the leaf, getting a value at
+        Run a single simulate from the root to the leaf, getting a value at
         the leaf and propagating it back through its parents. State is modified
         in-place, so a copy must be provided.
 
@@ -137,13 +137,13 @@ class MCTS(object):
             board.move(action)
             board.change_player()
 
-        # Check for end of game.
         win, winner = board.get_game_status()
 
         if win == -1:
             node.expand(policy)
         else:
             # for end state，return the "true" leaf_value.
+            board.change_player()
             if win == 0:
                 value = 0.0
             else:

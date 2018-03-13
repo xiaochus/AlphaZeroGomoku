@@ -70,7 +70,7 @@ class Game(object):
         """
         self._restart_game()
         winner, win = 0, 0
-        states, move_probs, current_players = [], [], []
+        states, move_probs, cor_players = [], [], []
 
         while True:
             states.append(self.board.get_current_states())
@@ -83,7 +83,7 @@ class Game(object):
 
             move_probs.append(probs)
             current_player = self.board.get_current_player()
-            current_players.append(current_player)
+            cor_players.append(current_player)
 
             win, winner = self.board.get_game_status()
 
@@ -92,6 +92,9 @@ class Game(object):
 
             self.board.change_player()
 
-        values = [win if p == winner else -1 for p in current_players]
+        if win == 1:
+            values = np.array([1 if p == winner else -1 for p in cor_players])
+        else:
+            values = np.zeros(len(move_probs))
 
-        return np.array(states), np.array(move_probs), np.array(values)
+        return np.array(states), np.array(move_probs), values

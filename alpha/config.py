@@ -17,9 +17,10 @@ FILTERS = 32
 
 # train params for policy value network during self-play
 
+INIT = 1
 TRAIN_EPOCHS = 50
-BATCH = 50
-SELF_PLAY_EPOCHS = 200
+BATCH = 64
+SELF_PLAY_EPOCHS = 2000
 
 # params for MCTS
 c_puct = 5
