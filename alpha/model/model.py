@@ -10,7 +10,7 @@ from keras.layers import Input, Conv2D, Dense, BatchNormalization
 from keras.layers import Flatten, add
 from keras.layers.advanced_activations import LeakyReLU
 from keras.regularizers import l2
-from keras.optimizers import SGD
+from keras.optimizers import Adam
 
 
 class PolicyValueNet(object):
@@ -142,7 +142,7 @@ class PolicyValueNet(object):
         model = Model(inputs=[inputs], outputs=[value_output, policy_output])
         model.compile(loss={'value_output': 'mse',
                             'policy_output': 'categorical_crossentropy'},
-                      optimizer=SGD(),
+                      optimizer=Adam(),
                       loss_weights={'value_output': 0.5, 'policy_output': 0.5})
 
         return model

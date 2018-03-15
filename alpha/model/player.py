@@ -10,7 +10,6 @@ from .model import PolicyValueNet
 
 import numpy as np
 from keras.utils.vis_utils import plot_model
-from keras.preprocessing.image import ImageDataGenerator
 
 
 class Player(metaclass=ABCMeta):

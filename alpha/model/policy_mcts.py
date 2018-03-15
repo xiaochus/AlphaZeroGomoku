@@ -128,26 +128,25 @@ class MCTS(object):
         value: Double， value from policy value network.
         """
         node = self.root
-
+        win, winner, cur = -1, 0, 0
         while True:
             if node.is_leaf():
                 break
             # Greedily select next move.
             action, node = node.select(self.c_put)
             board.move(action)
+            win, winner = board.get_game_status()
+            cur = board.get_current_player()
             board.change_player()
-
-        win, winner = board.get_game_status()
 
         if win == -1:
             node.expand(policy)
         else:
             # for end state，return the "true" leaf_value.
-            board.change_player()
             if win == 0:
                 value = 0.0
             else:
-                value = 1.0 if winner == board.get_current_player() else - 1.0
+                value = 1.0 if winner == cur else - 1.0
 
         # Update value and visit count of nodes in this traversal.
         node.update_recursive(-value)
@@ -173,7 +172,6 @@ class MCTS(object):
         the root node
         """
         act_visits = [(a, n.visited) for a, n in self.root.children.items()]
-
         acts, visits = zip(*act_visits)
         act_probs = self.softmax(1.0 / temp * np.log(np.array(visits) + 1e-10))
 

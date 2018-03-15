@@ -24,7 +24,7 @@ def augment_data(states, values, probs):
         policy: ndarray, augmented policy output.
     """
     extends = {0: [], 1: [], 2: []}
-    for state, prob, value in zip(states, probs, values):
+    for state, prob, value in zip(states[1:], probs[1:], values[1:]):
         # rotate counterclockwise
         for i in [1, 2, 3, 4]:
             e_state = np.array([np.rot90(s, i) for s in state])
@@ -45,7 +45,7 @@ def augment_data(states, values, probs):
     return np.array(extends[0]), np.array(extends[1]), np.array(extends[2])
 
 
-def train(augment=0):
+def train():
     """
     Train the model with self-play.
 
@@ -61,7 +61,7 @@ def train(augment=0):
     for i in range(c.SELF_PLAY_EPOCHS):
         states, move_probs, values = game.self_play(player)
 
-        if augment:
+        if c.AUGMENT:
             states, values, move_probs = augment_data(states, values, move_probs)
 
         print("Self-play turn {0}".format(i + 1))
@@ -82,11 +82,4 @@ def train(augment=0):
 
 
 if __name__ == '__main__':
-    train(1)
-    """
-    from os import system
-    import time
-
-    time.sleep(60)
-    system("shutdown -s -t 0")
-    """
+    train()
