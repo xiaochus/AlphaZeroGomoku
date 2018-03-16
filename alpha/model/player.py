@@ -70,6 +70,11 @@ class AlphaZeroPlayer(Player):
 
         plot_model(self.model, to_file='images/PolicyValueNet.png', show_shapes=True)
 
+    def reset_player(self):
+        """# reset MCTS root node.
+        """
+        self.mcts.update_with_move(-1)
+
     def _get_value_policy(self, states):
         """Get the value output and policy output.
 
@@ -114,7 +119,7 @@ class AlphaZeroPlayer(Player):
             # choosing the move with the highest prob
             move = np.random.choice(acts, p=probs)
             # reset the root node
-            self.mcts.update_with_move(-1)
+            self.reset_player()
 
         if return_prob:
             return move, move_probs

@@ -21,13 +21,13 @@ INIT = 0
 AUGMENT = 1
 TRAIN_EPOCHS = 50
 BATCH = 64
-SELF_PLAY_EPOCHS = 600
+SELF_PLAY_EPOCHS = 1000
 
 # params for MCTS
 c_puct = 5
-N_SIMULATE = 800
+N_SIMULATE = 500
 
 
 # param for game AI
 FIRST = 0
-AI_V_AI = 0
+AI_V_AI = 1

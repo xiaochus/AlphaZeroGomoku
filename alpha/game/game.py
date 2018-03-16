@@ -88,6 +88,8 @@ class Game(object):
             win, winner = self.board.get_game_status()
 
             if win in [0, 1]:
+                # reset MCTS root node
+                player.reset_player()
                 break
 
             self.board.change_player()

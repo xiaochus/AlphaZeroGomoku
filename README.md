@@ -32,7 +32,17 @@ python gomoku.py
 
 ## Experiment
 
-TODO
+Due to the limited computational resources, we train the model with 2000 times self-paly and get a preliminary results. 
+
+AI did not show the expected strength on game and I will continue to review the code.
+
+**AI vs AI**
+
+![PolicyValueNet](/images/self.png)
+
+**AI vs Human, human first**
+
+![PolicyValueNet](/images/win.png)
 
 ## Reference
 
